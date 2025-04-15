@@ -20,7 +20,9 @@ export function renderOrderSummary() {
 
   cartSummaryHTML += 
   `
-    <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
+    <div class="cart-item-container 
+      js-cart-item-container
+      js-cart-item-container-${matchingProduct.id}">
       <div class="delivery-date">
         Delivery date: ${dateString}
       </div>
@@ -36,7 +38,8 @@ export function renderOrderSummary() {
           <div class="product-price">
             ${formatCurrency(matchingProduct.priceCents)}
           </div>
-          <div class="product-quantity">
+          <div class="product-quantity 
+            js-product-quantity-${matchingProduct.id}">
             <span>
               Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span>
             </span>
@@ -45,7 +48,8 @@ export function renderOrderSummary() {
             </span>
             <input class = "quantity-input js-quantity-input-${matchingProduct.id}">
             <span class = "save-quantity-link link-primary js-save-link" data-product-id="${matchingProduct.id}">Save</span>
-            <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
+            <span class="delete-quantity-link link-primary js-delete-link
+              js-delete-link-${matchingProduct.id}" data-product-id="${matchingProduct.id}">
               Delete
             </span>
           </div>
@@ -98,30 +102,33 @@ export function renderOrderSummary() {
   return html;
   }
 
-  document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
+  document.querySelector('.js-order-summary')
+    .innerHTML = cartSummaryHTML;
 
-  document.querySelectorAll('.js-update-link').forEach((link) => {
-  link.addEventListener('click', () => {
+  document.querySelectorAll('.js-update-link')
+    .forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId;
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      container.classList.add('is-editing-quantity');
+    });
+  });
+
+  document.querySelectorAll('.js-save-link')
+    .forEach((link) => {
     const productId = link.dataset.productId;
-    const container = document.querySelector(`.js-cart-item-container-${productId}`);
-    container.classList.add('is-editing-quantity');
-  });
-  });
-
-  document.querySelectorAll('.js-save-link').forEach((link) => {
-  const productId = link.dataset.productId;
-  const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
-  link.addEventListener('click', () => {
-    handleUpdateQuantity(productId, quantityInput);
-    renderPaymentSummary();
-  });
-
-  quantityInput.addEventListener('keydown', (event) => {
-    if(event.key === 'Enter'){
+    const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+    link.addEventListener('click', () => {
       handleUpdateQuantity(productId, quantityInput);
       renderPaymentSummary();
-    }
-  });
+    });
+
+    quantityInput.addEventListener('keydown', (event) => {
+      if(event.key === 'Enter'){
+        handleUpdateQuantity(productId, quantityInput);
+        renderPaymentSummary();
+      }
+    });
   });
 
   function handleUpdateQuantity(productId, quantityInput){
@@ -134,7 +141,7 @@ export function renderOrderSummary() {
   updateQuantity(productId, newQuantity);
 
   document.querySelector(`.js-quantity-label-${productId}`).innerHTML = newQuantity;
-  updateCartQuantity();
+  renderCheckoutHeader();
 
   const container = document.querySelector(`.js-cart-item-container-${productId}`);
   container.classList.remove('is-editing-quantity');
@@ -149,15 +156,15 @@ export function renderOrderSummary() {
 
   renderPaymentSummary();
 
-  updateCartQuantity();
+  renderCheckoutHeader();
   });
   });
 
-  function updateCartQuantity() {
-    renderCheckoutHeader();
-  }
+  //function updateCartQuantity() {
+  //  renderCheckoutHeader();
+  //}
 
-  updateCartQuantity();
+  renderCheckoutHeader();
 
   document.querySelectorAll('.js-delivery-option')
   .forEach((element) => {
