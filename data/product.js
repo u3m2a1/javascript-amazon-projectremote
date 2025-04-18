@@ -792,9 +792,8 @@ export const products = [
 
 export let products = [];
 
-export function loadProducts(fun) {
+export function loadProducts(fun = () => {}) {
   const xhr = new XMLHttpRequest();
-
   xhr.addEventListener('load', () => {
     products = JSON.parse(xhr.response).map((productDetails) => {
       if(productDetails.type === 'clothing') {
@@ -806,6 +805,7 @@ export function loadProducts(fun) {
       return new Product(productDetails);
     });
 
+    console.log('load products');
     fun();
   });
 
