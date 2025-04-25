@@ -4,9 +4,6 @@ import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 import formatCurrency from "./utils/money.js";
 import { addToCart, calculateCartQuantity, cart } from "../data/cart.js";
 
-const cartQuantity = calculateCartQuantity();
-  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-
 async function loadPage() {
   await loadProductsFetch();
 
@@ -113,6 +110,8 @@ async function loadPage() {
     })
   });
 
+  const cartQuantity = calculateCartQuantity();
+  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
 }
 
 loadPage();
